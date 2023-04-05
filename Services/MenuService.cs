@@ -1,100 +1,96 @@
-﻿
+﻿using ErrorReportApp_Console.Models.Forms;
+using System;
 
-using ErrorReportApp_Console.Models.Forms;
-
-namespace ErrorReportApp_Console.Services;
-
-internal class MenuService
+namespace ErrorReportApp_Console.Services
 {
-    private readonly ErrorReportService _errorReportService = new ErrorReportService();
-    public async Task MainMenu()
+    internal class MenuService
     {
-        Console.Clear();
-        Console.WriteLine("######MAIN MENU######");
-        Console.WriteLine("1. Make a new error report");
-        Console.WriteLine("2. Show all error reports");
-        Console.WriteLine("3. Show all error reports made by name");
-        Console.WriteLine("4. Delete a report");
-        Console.WriteLine("5. Delete all reports");
-        var option = Console.ReadLine();
-        switch (option)
+       
+        public async Task MainMenu()
         {
-            case "1":
-                Console.WriteLine("");
-                await CreateMenu();
-                break;
-            case "2":
-                await ShowAllMenu();
-                break;
-            case "3":
-                break;
-            case "4":
-                await DeleteReportMenu ();
-                break;
-            case "5":
-                await DeleteAll();
-                break;
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(@"  __  __       _         __  __                  ");
+            Console.WriteLine(@" |  \/  | __ _(_)_ __   |  \/  | ___ _ __  _   _ ");
+            Console.WriteLine(@" | |\/| |/ _` | | '_ \  | |\/| |/ _ \ '_ \| | | |");
+            Console.WriteLine(@" | |  | | (_| | | | | | | |  | |  __/ | | | |_| |");
+            Console.WriteLine(@" |_|  |_|\__,_|_|_| |_| |_|  |_|\___|_| |_|\__,_|");
+            Console.WriteLine(@"                                                 ");
+            Console.ForegroundColor= ConsoleColor.Green;
+            Console.WriteLine("\n\n[1]Submit a new error report\n");
+            Console.WriteLine("[2]View all reports\n");
+            Console.WriteLine("[3]Set status of a report\n");
+            var menuSelection = Console.ReadLine();
+            switch (menuSelection)
+            {
+                case "1":
+                    await CreateErrorReport();
+                    break;
+                case "2":
+                    await ShowAllCasesAsync();
+                    break;
 
+            }
         }
 
-    }
 
-    public async Task CreateMenu()
-    {
-        var form = new ReportRegistrationForm();
-        Console.Clear();
-        Console.WriteLine("First Name:"); form.FirstName = Console.ReadLine() ?? "";
-        Console.WriteLine("Last Name"); form.LastName = Console.ReadLine() ?? "";
-        Console.WriteLine("Email:"); form.Email = Console.ReadLine() ?? "";
-        Console.WriteLine("Description:"); form.Description = Console.ReadLine() ?? "";
-        var result = await _errorReportService.CreateAsync(form);
-        if(result == null)
+        private async Task CreateErrorReport()
         {
-            Console.WriteLine("There is already a report listed with the email you provided");
+
+            var customer = new Customer();
+            var addCase = new AddCase();
+            Console.Clear();
+            Console.WriteLine("Enter your first name");
+            customer.FirstName = Console.ReadLine() ?? "";
+            Console.WriteLine("Enter your last name");
+            customer.LastName = Console.ReadLine() ?? "";
+            Console.WriteLine("Enter your email");
+            customer.Email = Console.ReadLine() ?? "";
+            Console.WriteLine("Enter your phone number");
+            customer.PhoneNumber = Console.ReadLine() ?? "";
+            Console.WriteLine("Enter your address");
+            customer.StreeName = Console.ReadLine() ?? "";
+            Console.WriteLine("Enter your zipcode");
+            customer.PostalCode = Console.ReadLine() ?? "";
+            Console.WriteLine("Enter your city");
+            customer.City = Console.ReadLine() ?? "";
+            Console.Clear();
+            Console.WriteLine("In what category does your error belong?");         
+            addCase.Title = Console.ReadLine() ?? "";
+            Console.WriteLine("Describe whats wrong in as much detail as possible");
+            addCase.Description = Console.ReadLine() ?? "";
+
+            addCase.CustomerId = await CustomerService.SaveAsync(customer);
+            await CaseService.SaveAsync(addCase);
+            Console.WriteLine("Error submitted!");
+            Console.WriteLine("Press any key to return to the main menu");
+            Console.ReadKey();
         }
-        else
+        private async Task ShowAllCasesAsync()
         {
-            Console.WriteLine($"Report submitted, details emailed to: {result.Email}");
+            Console.Clear();
+
+            var cases = await CaseService.GetAllAsync();
+            if(cases.Any()) 
+            {
+                foreach (Case _case in cases)
+                {
+                    Console.WriteLine("------------------------------");
+                    Console.WriteLine($"Casenumber: {_case.Id}");
+                    Console.WriteLine($"Casenumber: {_case.Title}");
+                    Console.WriteLine($"Casenumber: {_case.Description}");
+                    Console.WriteLine($"Casenumber: {_case.Status}");
+                    Console.WriteLine($"Casenumber: {_case.CustomerId}");
+                    Console.WriteLine("------------------------------");
+                }                    
+            }
+            else
+            {
+                Console.WriteLine("There is no saved errors");
+            }
+            Console.ReadKey();
         }
 
-    }
-    public async Task ShowAllMenu()
-    {
-        Console.Clear();
-        Console.WriteLine("######CATALOGUE######\n\n");
-        foreach(var errorreport in await _errorReportService.GetAllAsync())
-        {
-           
-            Console.WriteLine($"Name:{errorreport.FirstName} {errorreport.LastName} {errorreport.Email}\n{errorreport.Description}\n\n");
-        }
-        Console.ReadKey();
-    }
-
-    public async Task ShowByName()
-    {
-        Console.Clear();
 
     }
-
-    public async Task DeleteReportMenu()
-    {
-         
-        Console.Clear();
-        Console.WriteLine("Enter the email you used for your report");
-        var email = Console.ReadLine();
-        if(email != null)
-        {
-            await _errorReportService.DeleteAsync(email);
-            Console.WriteLine("Report deleted");
-        }
-        else
-        {
-            Console.WriteLine($"No reports made by {email}");
-        }
-    }
-    public async Task DeleteAll()
-    {
-        await _errorReportService.DeleteAllAsync();
-    }
-
 }

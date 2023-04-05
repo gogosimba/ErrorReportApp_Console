@@ -1,24 +1,44 @@
 ﻿using ErrorReportApp_Console.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
+
 namespace ErrorReportApp_Console.Contexts;
 
 internal class DataContext : DbContext
 {
-    #region constructors and overrides
+    #region constructors
     public DataContext()
     {
         
     }
+
     public DataContext(DbContextOptions<DataContext> options) : base(options)
     {
 
     }
-
+    #endregion
+    #region overrides
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseSqlServer(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\jonat\OneDrive\Dokument\Webbdesign\C#\ErrorReportApp_Console\Contexts\ErrorReportAppDatabase.mdf;Integrated Security=True;Connect Timeout=30");
+        if(!optionsBuilder.IsConfigured) 
+        {
+            optionsBuilder.UseSqlServer(@"Data Source = (LocalDB)\MSSQLLocalDB; AttachDbFilename = C:\Users\jonat\OneDrive\Dokument\Webbdesign\C#\ErrorReportApp_Console\Contexts\ErrorReports.mdf;Integrated Security=True;Connect Timeout=30");
+        }
+    }
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+      
+        base.OnModelCreating(modelBuilder);
     }
     #endregion
-    public DbSet<ErrorReportsEntity> ErrorReports { get; set; }
+    #region entities
+
+    public DbSet<CaseEntity> Cases { get; set; } = null!;
+    public DbSet<CustomerEntity> Customers { get; set; } = null!;
+    public DbSet<AddressEntity> Addresses { get; set; } = null!;
+
+
+
+    #endregion
+
 }

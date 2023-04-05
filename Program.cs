@@ -1,7 +1,16 @@
-﻿using ErrorReportApp_Console.Services;
+﻿
+using ErrorReportApp_Console.Services;
 
-var menu = new MenuService();
-while (true)
+internal class Program
 {
-    menu.MainMenu();
+    private static async Task Main(string[] args)
+    {
+        
+        MenuService menu = new MenuService();
+
+        while (true)
+        { 
+            await menu.MainMenu();
+        }
+    }
 }

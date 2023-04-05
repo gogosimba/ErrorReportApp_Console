@@ -27,7 +27,6 @@ internal class CaseService
     public static async Task<IEnumerable<Case>> GetAllAsync()
     {
         var _cases = new List<Case>();
-
         foreach (var _case in await _context.Cases.ToListAsync())
             _cases.Add(new Case
             {
@@ -35,9 +34,11 @@ internal class CaseService
                 Title = _case.Title,
                 Description = _case.Description,
                 CustomerId = _case.CustomerId,
-                Status = _case.Status
+                Status = _case.Status,
+        
+                
+                
             });
-
         return _cases;
     }
 
@@ -66,7 +67,8 @@ internal class CaseService
 
         if (caseEntity == null)
         {
-            throw new Exception("Det eferfrågade ärendenumret finns inte.");
+            
+            return caseEntity;
         }
 
         caseEntity.Status = newStatus;

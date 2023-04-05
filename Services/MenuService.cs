@@ -1,5 +1,6 @@
 ﻿using ErrorReportApp_Console.Models.Forms;
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace ErrorReportApp_Console.Services
 {
@@ -20,6 +21,7 @@ namespace ErrorReportApp_Console.Services
             Console.WriteLine("\n\n[1]Submit a new error report\n");
             Console.WriteLine("[2]View all reports\n");
             Console.WriteLine("[3]Set status of a report\n");
+            Console.WriteLine("[4]Search for a specific report using customer ID");
             var menuSelection = Console.ReadLine();
             switch (menuSelection)
             {
@@ -28,6 +30,12 @@ namespace ErrorReportApp_Console.Services
                     break;
                 case "2":
                     await ShowAllCasesAsync();
+                    break;
+                case "3":
+                    await UpdateStatus();
+                    break;
+                case "4":
+                    await GetSpecificCase();
                     break;
 
             }
@@ -49,7 +57,7 @@ namespace ErrorReportApp_Console.Services
             Console.WriteLine("Enter your phone number");
             customer.PhoneNumber = Console.ReadLine() ?? "";
             Console.WriteLine("Enter your address");
-            customer.StreeName = Console.ReadLine() ?? "";
+            customer.StreetName = Console.ReadLine() ?? "";
             Console.WriteLine("Enter your zipcode");
             customer.PostalCode = Console.ReadLine() ?? "";
             Console.WriteLine("Enter your city");
@@ -77,17 +85,68 @@ namespace ErrorReportApp_Console.Services
                 {
                     Console.WriteLine("------------------------------");
                     Console.WriteLine($"Casenumber: {_case.Id}");
-                    Console.WriteLine($"Casenumber: {_case.Title}");
-                    Console.WriteLine($"Casenumber: {_case.Description}");
-                    Console.WriteLine($"Casenumber: {_case.Status}");
-                    Console.WriteLine($"Casenumber: {_case.CustomerId}");
+                    Console.WriteLine($"Category: {_case.Title}");
+                    Console.WriteLine($"Description: {_case.Description}");
+                    Console.WriteLine($"Status: {_case.Status}");
+                    Console.WriteLine($"CustomerID: {_case.CustomerId}");
                     Console.WriteLine("------------------------------");
                 }                    
             }
             else
             {
-                Console.WriteLine("There is no saved errors");
+                Console.WriteLine("There are no saved errors");
             }
+            Console.ReadKey();
+        }
+
+        private async Task UpdateStatus()
+        {
+            var newStatus = "";          
+            var caseService = new CaseService();
+            
+            Console.Clear();
+            Console.WriteLine("Write the assosciated casenumber for your case to update its status");
+            var caseId = Convert.ToInt32(Console.ReadLine());
+            Console.Clear();
+            Console.WriteLine("[1] Ongoing");
+            Console.WriteLine("[2] Completed");
+            Console.WriteLine("[3] Custom");
+            var selection = Console.ReadLine();
+            switch(selection)
+            {
+                case "1":
+                    newStatus = "Ongoing";
+                    break;
+                case "2":
+                    newStatus = "Completed";
+                    break;
+                case "3":
+                    Console.WriteLine("Set a custom status:");
+                    newStatus = Console.ReadLine();
+                    break;
+            }
+            var updatedCase = await caseService.UpdateCaseStatusAsync(caseId, newStatus);
+            Console.Clear();          
+        }
+        private async Task GetSpecificCase()
+        {
+            Console.WriteLine("Enter your customerID");
+            var customerID = Convert.ToInt32(Console.ReadLine());
+            
+            
+                Console.Clear();
+                var cases = await CaseService.GetAsync(customerID);
+                if(cases != null) 
+                {
+                    Console.WriteLine($"Customer ID: {cases.CustomerId}");
+                    Console.WriteLine($"Category: {cases.Title}");
+                    Console.WriteLine($"Description: {cases.Description}");
+                }
+                else
+                {
+                    Console.WriteLine("No cases found with the provided customer ID, be sure you wrote it correctly");
+                }
+            
             Console.ReadKey();
         }
 

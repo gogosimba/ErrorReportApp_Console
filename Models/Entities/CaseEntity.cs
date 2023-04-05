@@ -14,7 +14,7 @@ namespace ErrorReportApp_Console.Models.Entities
         public DateTime RegDate { get; set; } = DateTime.Now;
         public string Title { get; set; } = null!;
         public string Description { get; set; } = null!;
-        public string Status { get; set; } = "Ej påbörjad";
+        public string Status { get; set; } = "Not started";
 
 
         public int CustomerId { get; set; }

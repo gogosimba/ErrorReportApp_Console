@@ -19,7 +19,7 @@ namespace ErrorReportApp_Console.Services
                 PhoneNumber = customer.PhoneNumber ?? "",
             };
 
-            var _addressEntity = await _context.Addresses.FirstOrDefaultAsync(x => x.StreetName == customer.StreeName && x.PostalCode == customer.PostalCode && x.City == customer.City);
+            var _addressEntity = await _context.Addresses.FirstOrDefaultAsync(x => x.StreetName == customer.StreetName && x.PostalCode == customer.PostalCode && x.City == customer.City);
 
             if (_addressEntity != null)
             {
@@ -28,7 +28,7 @@ namespace ErrorReportApp_Console.Services
             else
                 _customerEntity.Address = new AddressEntity
                 {
-                    StreetName = customer.StreeName,
+                    StreetName = customer.StreetName,
                     PostalCode = customer.PostalCode,
                     City = customer.City,
                 };

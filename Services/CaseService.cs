@@ -27,7 +27,7 @@ internal class CaseService
     public static async Task<IEnumerable<Case>> GetAllAsync()
     {
         var _cases = new List<Case>();
-        foreach (var _case in await _context.Cases.ToListAsync())
+        foreach (var _case in await _context.Cases.Include(x=> x.Customer).ToListAsync())
             _cases.Add(new Case
             {
                 Id = _case.Id,
@@ -35,6 +35,9 @@ internal class CaseService
                 Description = _case.Description,
                 CustomerId = _case.CustomerId,
                 Status = _case.Status,
+                FirstName = _case.Customer.FirstName,
+                LastName = _case.Customer.LastName
+                
         
                 
                 
@@ -50,6 +53,9 @@ internal class CaseService
             return new Case
             {
                 Id = _case.Id,
+                FirstName = _case.Customer.FirstName,
+                LastName = _case.Customer.LastName,
+                Email = _case.Customer.Email,
                 Description = _case.Description,
                 Title = _case.Title,
                 CustomerId = _case.CustomerId,

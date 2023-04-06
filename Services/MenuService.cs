@@ -84,6 +84,7 @@ namespace ErrorReportApp_Console.Services
                 foreach (Case _case in cases)
                 {
                     Console.WriteLine("------------------------------");
+                    Console.WriteLine($"By: {_case.LastName},{_case.FirstName}");
                     Console.WriteLine($"Casenumber: {_case.Id}");
                     Console.WriteLine($"Category: {_case.Title}");
                     Console.WriteLine($"Description: {_case.Description}");
@@ -139,6 +140,8 @@ namespace ErrorReportApp_Console.Services
                 if(cases != null) 
                 {
                     Console.WriteLine($"Customer ID: {cases.CustomerId}");
+                    Console.WriteLine($"Written by: {cases.LastName}, {cases.FirstName}");
+                    Console.WriteLine($"Email: {cases.Email}");
                     Console.WriteLine($"Category: {cases.Title}");
                     Console.WriteLine($"Description: {cases.Description}");
                 }

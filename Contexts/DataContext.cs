@@ -22,8 +22,9 @@ internal class DataContext : DbContext
     {
         if(!optionsBuilder.IsConfigured) 
         {
-            optionsBuilder.UseSqlServer(@"Data Source = (LocalDB)\MSSQLLocalDB; AttachDbFilename = C:\Users\jonat\OneDrive\Dokument\Webbdesign\C#\ErrorReportApp_Console\Contexts\ErrorReports.mdf;Integrated Security=True;Connect Timeout=30");
+            optionsBuilder.UseSqlServer(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\Jonathans\Documents\ErrorReports.mdf;Integrated Security=True;Connect Timeout=30");
         }
+
     }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

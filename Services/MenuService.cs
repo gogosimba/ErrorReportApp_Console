@@ -1,4 +1,5 @@
-﻿using ErrorReportApp_Console.Models.Forms;
+﻿using ErrorReportApp_Console.Models.Entities;
+using ErrorReportApp_Console.Models.Forms;
 using System;
 using System.ComponentModel.DataAnnotations;
 
@@ -21,7 +22,8 @@ namespace ErrorReportApp_Console.Services
             Console.WriteLine("\n\n[1]Submit a new error report\n");
             Console.WriteLine("[2]View all reports\n");
             Console.WriteLine("[3]Set status of a report\n");
-            Console.WriteLine("[4]Search for a specific report using customer ID");
+            Console.WriteLine("[4]Search for a specific report using customer ID\n");
+            Console.WriteLine("[5]Delete a report");
             var menuSelection = Console.ReadLine();
             switch (menuSelection)
             {
@@ -36,6 +38,9 @@ namespace ErrorReportApp_Console.Services
                     break;
                 case "4":
                     await GetSpecificCase();
+                    break;
+                case "5":
+                    await DeleteCase();
                     break;
 
             }
@@ -151,6 +156,22 @@ namespace ErrorReportApp_Console.Services
                 }
             
             Console.ReadKey();
+        }
+        private async Task DeleteCase()
+        {
+            Console.WriteLine("Enter your customerID");
+            var customerID = Convert.ToInt32(Console.ReadLine());
+            var _deleteCase = await CaseService.DeleteCaseAsync(customerID);
+            if( _deleteCase != null )
+            {
+                System.Console.WriteLine("Case deleted");
+            }
+            else
+            {
+                System.Console.WriteLine("No case matching the CustomerID");
+            }
+            Console.ReadKey();
+
         }
 
 

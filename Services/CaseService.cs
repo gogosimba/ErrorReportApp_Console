@@ -37,10 +37,7 @@ internal class CaseService
                 Status = _case.Status,
                 FirstName = _case.Customer.FirstName,
                 LastName = _case.Customer.LastName
-                
-        
-                
-                
+
             });
         return _cases;
     }
@@ -82,5 +79,17 @@ internal class CaseService
         await _context.SaveChangesAsync();
 
         return caseEntity;
+    }
+    public static async Task<CaseEntity> DeleteCaseAsync(int caseId)
+    {
+        var caseEntity = await _context.Cases.FindAsync(caseId);
+        
+        if(caseEntity != null)
+        {
+            _context.Remove(caseEntity);
+            await _context.SaveChangesAsync();
+            return caseEntity;
+        }
+        return null!;
     }
 }
